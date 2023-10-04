@@ -56,6 +56,7 @@ def TelaADM():
 
 # Tela gráfica de cadastro de funcionários
 def CadFuncionario():
+    # Menu para troca de usuário e logout para fechar o sistema
     menu = [
             ['Menu',['Trocar usuário', 'Logout']]
         ]

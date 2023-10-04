@@ -36,7 +36,7 @@ def loopLogin():
         if event == 'Entrar' and values['usuario'] == 'adm' and values['senha'] == 'adm':
             janelaLayout.close()
             
-            def loop():
+            def loopADM():
                 # tela do ADM
                 layoutInicialAdm = [[telaADM()]]
                 janelaLayoutInicial = sg.Window('Tela inicial', layoutInicialAdm, size=(600, 600))
@@ -58,93 +58,99 @@ def loopLogin():
                     if event == 'Cadastrar funcionários':
                         janelaLayoutInicial.close()
 
-                        layoutCadFuncionario = [[gcf()]]
+                        def loopCadastrarFunc():
+                            layoutCadFuncionario = [[gcf()]]
 
-                        janelaCadastro = sg.Window('Cadastro', layoutCadFuncionario, size=(600, 600))
+                            janelaCadastro = sg.Window('Cadastro', layoutCadFuncionario, size=(600, 600))
 
-                        while True:
+                            while True:
 
-                            event, values = janelaCadastro.read()
+                                event, values = janelaCadastro.read()
 
-                            if event == sg.WINDOW_CLOSED:
-                                janelaCadastro.close()
-                                break
-                            if event == 'Voltar':
-                                janelaCadastro.close()
-                                loop()
-                            if event == 'Logout':
-                                janelaCadastro.close()
-                                break
+                                if event == sg.WINDOW_CLOSED:
+                                    janelaCadastro.close()
+                                    break
+                                if event == 'Voltar':
+                                    janelaCadastro.close()
+                                    loopADM()
+                                if event == 'Logout':
+                                    janelaCadastro.close()
+                                    break
 
-                            # Confirmar cadastro de funcionário preenchido nos inputs
-                            if event == 'Cadastrar':
+                                # Confirmar cadastro de funcionário preenchido nos inputs
+                                if event == 'Cadastrar':
 
-                                valores = (
-                                    values['nome'], values['cpf'], values['dn'], values['cargo'], values['salario'], values['rua'], values['numero'], values['bairro'], values['cidade'], values['uf'],
-                                    )
+                                    valores = (
+                                        values['nome'], values['cpf'], values['dn'], values['cargo'], values['salario'], values['rua'], values['numero'], values['bairro'], values['cidade'], values['uf'],
+                                        )
 
-                                c.execute('''INSERT INTO funcionarios(Nome, CPF, Data_de_nascimento, Cargo, Salário, Rua, Número, Bairro, Cidade, UF) VALUES(? ,? ,? ,? ,? ,? ,? ,?, ?, ? )''', valores)
-                                conn.commit()
-
-                                sg.popup('Cadastro efetuado', title='Confirmação')
-
-                                janelaCadastro['nome'].update('')
-                                janelaCadastro['cpf'].update('')
-                                janelaCadastro['dn'].update('')
-                                janelaCadastro['cargo'].update('')
-                                janelaCadastro['salario'].update('')
-                                janelaCadastro['rua'].update('')
-                                janelaCadastro['numero'].update('')
-                                janelaCadastro['bairro'].update('')
-                                janelaCadastro['cidade'].update('')
-                                janelaCadastro['uf'].update('')
-
-                            # Consultar funcionários cadastrados
-                            if event == 'Lista de funcionários':
-                                janelaCadastro.close()
-
-                                def deleteFunc(nameDelete):
-                                    c.execute('DELETE FROM funcionarios WHERE UPPER(Nome) =?', (nameDelete,))
+                                    c.execute('''INSERT INTO funcionarios(Nome, CPF, Data_de_nascimento, Cargo, Salário, Rua, Número, Bairro, Cidade, UF) VALUES(? ,? ,? ,? ,? ,? ,? ,?, ?, ? )''', valores)
                                     conn.commit()
 
-                                layoutConsulta = [
-                                    [cf()],
-                                    [sg.Table(values=[values['nome']], headings=['NOME', 'CPF', 'DN', 'CARGO', 'SALÁRIO', 'RUA', 'NÚMERO', 'BAIRRO', 'CIDADE', 'UF'], 
-                                            key='table', expand_x=True, justification='c')],
-                                    [sg.Button('Excluir')]
-                                ]
+                                    sg.popup('Cadastro efetuado', title='Confirmação')
 
-                                janelaConsulta = sg.Window('Tela de Consulta', layoutConsulta, size=(800, 800), resizable=True)
+                                    janelaCadastro['nome'].update('')
+                                    janelaCadastro['cpf'].update('')
+                                    janelaCadastro['dn'].update('')
+                                    janelaCadastro['cargo'].update('')
+                                    janelaCadastro['salario'].update('')
+                                    janelaCadastro['rua'].update('')
+                                    janelaCadastro['numero'].update('')
+                                    janelaCadastro['bairro'].update('')
+                                    janelaCadastro['cidade'].update('')
+                                    janelaCadastro['uf'].update('')
 
-                                while True:
+                                # Consultar funcionários cadastrados
+                                if event == 'Lista de funcionários':
+                                    janelaCadastro.close()
+
                                     
-                                    event, values = janelaConsulta.read()
+                                    def deleteFunc(nameDelete):
+                                        c.execute('DELETE FROM funcionarios WHERE UPPER(Nome) =?', (nameDelete,))
+                                        conn.commit()
 
-                                    if event == sg.WINDOW_CLOSED:
-                                        janelaConsulta.close()
-                                        break
-                                    
-                                    if event == 'Buscar':
+                                    layoutConsulta = [
+                                        [cf()],
+                                        [sg.Table(values=[values['nome']], headings=['NOME', 'CPF', 'DN', 'CARGO', 'SALÁRIO', 'RUA', 'NÚMERO', 'BAIRRO', 'CIDADE', 'UF'], 
+                                                key='table', expand_x=True, justification='c')],
+                                        [sg.Button('Excluir'), sg.Button('Voltar')]
+                                    ]
+
+                                    janelaConsulta = sg.Window('Tela de Consulta', layoutConsulta, size=(800, 800), resizable=True)
+
+                                    while True:
                                         
-                                        buscaFuncionario = values['nome'].upper()
+                                        event, values = janelaConsulta.read()
 
-                                        c.execute('SELECT Nome, CPF, Data_de_nascimento,Cargo, Salário, Rua, Número, Bairro, Cidade, UF FROM funcionarios WHERE UPPER(Nome) = ?', (buscaFuncionario,)) 
+                                        if event == sg.WINDOW_CLOSED:
+                                            janelaConsulta.close()
+                                            break
+                                        if event == 'Voltar':
+                                            janelaConsulta.close()
+                                            loopCadastrarFunc()
+                                            
+                                        if event == 'Buscar':
+                                            
+                                            buscaFuncionario = values['nome'].upper()
 
-                                        res = c.fetchall()
-                                        
-                                        janelaConsulta['table'].update(values=res)
+                                            c.execute('SELECT Nome, CPF, Data_de_nascimento,Cargo, Salário, Rua, Número, Bairro, Cidade, UF FROM funcionarios WHERE UPPER(Nome) = ?', (buscaFuncionario,)) 
 
-                                    elif event == 'Excluir':
-                                        selected_row = values['table']
-                                        if selected_row:
-                                            selected_row_index = selected_row[0]
-                                            row_data = res[selected_row_index]
-                                            if sg.popup_yes_no('Tem certeza que deseja excluir este registro?', title='Confirmação') == 'Yes':
-                                                nameDelete = row_data[0]
-                                                deleteFunc(nameDelete)
-                                                res.pop(selected_row_index)
-                                                janelaConsulta['table'].update(values=res)
-                                                sg.popup('Excluido !', title='Confirmação')
+                                            res = c.fetchall()
+                                            
+                                            janelaConsulta['table'].update(values=res)
+
+                                        elif event == 'Excluir':
+                                            selected_row = values['table']
+                                            if selected_row:
+                                                selected_row_index = selected_row[0]
+                                                row_data = res[selected_row_index]
+                                                if sg.popup_yes_no('Tem certeza que deseja excluir este registro?', title='Confirmação') == 'Yes':
+                                                    nameDelete = row_data[0]
+                                                    deleteFunc(nameDelete)
+                                                    res.pop(selected_row_index)
+                                                    janelaConsulta['table'].update(values=res)
+                                                    sg.popup('Excluido !', title='Confirmação')
+                                loopCadastrarFunc()
                     
                     if event == 'Cadastrar produto':
                     
@@ -164,7 +170,7 @@ def loopLogin():
 
                             if event == 'Voltar':
                                 janelaCadastro.close()
-                                loop()
+                                loopADM()
 
                             if event == 'Cadastrar':
 
@@ -190,7 +196,7 @@ def loopLogin():
                                         janelaConsulta.close()
                                         break
 
-            loop()
+            loopADM()
    
         if event == 'Entrar' and values['usuario'] == 'caixa' and values['senha'] == 'caixa':
             
