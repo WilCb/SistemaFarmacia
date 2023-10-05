@@ -5,28 +5,28 @@ from lista import listaUf as estados, listaCidades as cidades, listaCargos as ca
 
 corDefundo = '#94B1B6'
 corFontePadrao = 'black'
-corBotaoPadrao = '#dbacac'
+corBotaoPadrao = '#0097B2'
 
 
 # Layout tela login
 def TelaLogin():
 
     titulo = [
-        [sg.Text('Bem vindo ao WL Farmácia', font='Arial 30', text_color='black', background_color='#87CEFA')],
-        [sg.Text('', background_color='#87CEFA')]
+        [sg.Text('Bem vindo', font='Arial 30', text_color=corFontePadrao, background_color=corDefundo)],
+        [sg.Text('', background_color=corDefundo)]
     ]
 
     formularioLogin = [
-        [sg.Text('Usuário: ', font='arial 13', text_color='black', background_color='#00BFFF')],
+        [sg.Text('Usuário: ', font='arial 13', text_color=corFontePadrao, background_color=corDefundo)],
         [sg.InputText(key='usuario', size=(10))],
-        [sg.Text('Senha: ', font='arial 13', text_color='black', background_color='#00BFFF')],
+        [sg.Text('Senha: ', font='arial 13', text_color=corFontePadrao, background_color=corDefundo)],
         [sg.InputText(key='senha', password_char='*', size=(10))],
-        [sg.Button('Entrar', font='arial 13', size=(7)), sg.Button('Sair', font='arial 13', size=(5))]
+        [sg.Button('Entrar', font='arial 13', button_color=corBotaoPadrao, size=(7)), sg.Button('Sair', font='arial 13', button_color=corBotaoPadrao, size=(5))]
     ]
 
     layout = [
-        [sg.Column(titulo, justification='c', background_color='#87CEFA')],
-        [sg.Column(formularioLogin, justification='c', background_color='#00BFFF')]
+        [sg.Column(titulo, justification='c', background_color=corDefundo)],
+        [sg.Column(formularioLogin, justification='c', background_color=corDefundo)]
     ]
 
     return layout
@@ -38,18 +38,19 @@ def TelaADM():
             ['Menu',['Trocar usuário', 'Logout']]
         ]
     
-    layoutInicialAdm = [
+    titulo = [
+        [sg.Text('Tela ADM', font=(corFontePadrao, 25), background_color=corDefundo)],
+        [sg.Text('', background_color=corDefundo)]
+    ]
+    btns = [
         [sg.Menu(menu)],
-        [sg.Button('Cadastrar funcionários', size=(20, 5)),
-        sg.Button('Lista de funcionários', size=(20, 5)),
-        sg.Button('Deletar funcionário', size=(20, 5))],
-        [sg.Button('Cadastrar produto', size=(20, 5)),
-        sg.Button('Lista de produtos', size=(20, 5)),
-        sg.Button('Deletar produto', size=(20, 5))]        
+        [sg.Column(titulo, justification='c', background_color=corDefundo)],
+        [sg.Button('Funcionários', button_color=corBotaoPadrao, size=(20, 5)), sg.Button('Produtos', button_color=corBotaoPadrao, size=(20, 5))],
+        [sg.Button('Relatório', button_color=corBotaoPadrao, size=(20, 5)), sg.Button('Gráfico', button_color=corBotaoPadrao, size=(20, 5))]
     ]
 
     centroLayout = [
-        [sg.Column(layoutInicialAdm, justification='c')]
+        [sg.Column(btns, justification='c', background_color=corDefundo)]
     ]
 
     return centroLayout
@@ -60,57 +61,78 @@ def CadFuncionario():
     menu = [
             ['Menu',['Trocar usuário', 'Logout']]
         ]
-
+    # Parte dos dados pessoais
+    tituloDadosPessoais = [
+        [sg.Text('Dados pessoais', font='Arial 30', background_color=corDefundo)],
+        [sg.Text('', background_color=corDefundo)]
+    ]
     formularioNome = [
 
-        [sg.Text('Dados pessoais', font='Arial 30')],
-        [sg.Text('Nome: ')],
+        [sg.Column(tituloDadosPessoais, justification='c', background_color=corDefundo)],
+        [sg.Text('Nome: ', background_color=corDefundo)],
         [sg.Input(key='nome')]
     
     ]
 
     formularioCPF = [
-        [sg.Text('CPF')],
+        [sg.Text('CPF', background_color=corDefundo)],
         [sg.Input(key='cpf', size=(13))]
     ]
 
     formularioDNascimento = [
-        [sg.Text('Data de Nascimento: ')],
-        [sg.CalendarButton('Escolher data', font='Arial 10', format='%d/%m/%y'),
+        [sg.Text('Data de Nascimento: ', background_color=corDefundo)],
+        [sg.CalendarButton('Escolher data', font='Arial 10', format='%d/%m/%y', button_color=corBotaoPadrao, size=(20)),
          sg.InputText(key='dn', size=(8, 20))]
     ]
+    # informações do endereço
 
+    tituloEndereco = [
+        [sg.Text('Endereço', font='Arial 30', background_color=corDefundo)],
+        [sg.Text('', background_color=corDefundo)]
+    ]
     endereco = [
-        [sg.Text('Endereço', font='Arial 30')],
-        [sg.Text('Rua')],
-        [sg.Input(key='rua'), sg.Text('Número: '), 
+        [sg.Column(tituloEndereco, justification='c', background_color=corDefundo)],
+        [sg.Text('Rua', background_color=corDefundo)],
+        [sg.Input(key='rua'), sg.Text('Número: ', background_color=corDefundo), 
          sg.Input(key='numero', size=(8, 20))],
-        [sg.Text('Bairro')],
+        [sg.Text('Bairro', background_color=corDefundo)],
         [sg.Input(key='bairro')],
-        [sg.Text('Cidade: '),
+        [sg.Text('Cidade: ', background_color=corDefundo),
          sg.OptionMenu(cidades(), ['Selecione'], key='cidade', size=(8, 20)),
-         sg.Text('UF: '),
+         sg.Text('UF: ', background_color=corDefundo),
          sg.OptionMenu(estados(), ['Selecione'], key='uf', size=(8, 20))]
     ]
 
+    # informações do cargo
+
+    tituloCargo = [
+        [sg.Text('Informações do cargo', font='Arial 30', background_color=corDefundo)],
+        [sg.Text('', background_color=corDefundo)]
+    ]
+
     registro = [
-        [sg.Text('Registro do funcionário', font='Arial 30')],
-        [sg.Text('Cargo: '),
+        [sg.Column(tituloCargo, justification='c', background_color=corDefundo)],
+        [sg.Text('Cargo: ', background_color=corDefundo),
          sg.OptionMenu(cargos(), ['Selecione'], key='cargo', size=(15, 20)), 
-         sg.Text('Salário: '), sg.InputText(key='salario', size=(15, 20))]
+         sg.Text('Salário: ', background_color=corDefundo), sg.InputText(key='salario', size=(15, 20))]
     ]
     
+    btns = [
+        [sg.Text('', background_color=corDefundo)],
+        [sg.Button('Cadastrar', button_color=corBotaoPadrao, size=(20)),
+         sg.Button('Lista de funcionários', button_color=corBotaoPadrao, size=(20)),
+         sg.Button('Voltar', button_color=corBotaoPadrao, size=(20))]
+    ]
+
     layoutCadFuncionario = [
         
         [sg.Menu(menu)],
         [formularioNome],
-        [sg.Column(formularioCPF),
-         sg.Column(formularioDNascimento)],
+        [sg.Column(formularioCPF, background_color=corDefundo),
+         sg.Column(formularioDNascimento, background_color=corDefundo)],
         [endereco],
         [registro],
-        [sg.Button('Cadastrar'),
-         sg.Button('Lista de funcionários'),
-         sg.Button('Voltar')]
+        [sg.Column(btns, justification='c', background_color=corDefundo)]
                     
     ]
 
